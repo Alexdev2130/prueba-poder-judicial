@@ -4,8 +4,9 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\authModel;
+
 use App\Models\Productos;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -24,25 +25,25 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        $admin = new authModel();
-        $admin->nombre = 'alejandro';
-        $admin->correo = 'admin@sistema.com';
-        $admin->clave = '$2y$10$DX6WUdMhHNFRFF7tbI4Ms.z4zumgZQU8SGGGVWy0T0BL3QZ0v3Vou';
+        $admin = new User();
+        $admin->name = 'alejandro';
+        $admin->email = 'admin@sistema.com';
+        $admin->password = password_hash('123456', PASSWORD_BCRYPT);
         $admin->rol = 'ADM';
         $admin->save();
 
-        $cliente1 = new authModel();
-        $cliente1->nombre = 'pedro';
-        $cliente1->correo = 'cliente1@sistema.com';
-        $cliente1->clave = '$2y$10$KYZYHZ3kxyoYImhmQ3vIYuijtuSXar3UW7wfcxsUKLMAw3WFEDkY2';
+        $cliente1 = new User();
+        $cliente1->name = 'pedro';
+        $cliente1->email = 'cliente1@sistema.com';
+        $cliente1->password = password_hash('123456', PASSWORD_BCRYPT);
         $cliente1->rol = 'CLIENTE';
         $cliente1->save();
 
 
-        $cliente2 = new authModel();
-        $cliente2->nombre = 'juan';
-        $cliente2->correo = 'cliente2@sistema.com';
-        $cliente2->clave = '$2y$10$KYZYHZ3kxyoYImhmQ3vIYuijtuSXar3UW7wfcxsUKLMAw3WFEDkY2';
+        $cliente2 = new User();
+        $cliente2->name = 'juan';
+        $cliente2->email = 'cliente2@sistema.com';
+        $cliente2->password = password_hash('123456', PASSWORD_BCRYPT);
         $cliente2->rol = 'CLIENTE';
         $cliente2->save();
 

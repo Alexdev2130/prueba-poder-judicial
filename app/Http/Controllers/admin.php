@@ -13,21 +13,20 @@ use function GuzzleHttp\json_encode;
 
 class admin extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('rol');
+    }
+
+
     public function index(Request $request){
-        if (!empty($_SESSION)) {
-            if ($_SESSION['rol'] !== 'ADM' && $_SERVER['REQUEST_URI'] === '/admin/home') {
-                return redirect('/home');
-            }
-        }
+
         return view('admin.index');
     }
 
     public function productos(Request $request){
-        if (!empty($_SESSION)) {
-            if ($_SESSION['rol'] !== 'ADM' && $_SERVER['REQUEST_URI'] === '/admin/home/productos') {
-                return redirect('/home');
-            }
-        }
+
 
         $productos = Productos::all();
 
@@ -38,11 +37,7 @@ class admin extends Controller
 
 
     public function createProductos(Request $request){
-        if (!empty($_SESSION)) {
-            if ($_SESSION['rol'] !== 'ADM' && $_SERVER['REQUEST_URI'] === '/admin/home/productos/create') {
-                return redirect('/home');
-            }
-        }
+
         $alertas = [];
 
         if($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -66,11 +61,7 @@ class admin extends Controller
 
     public function updateProductos(Request $request)
     {
-        if (!empty($_SESSION)) {
-            if ($_SESSION['rol'] !== 'ADM' && $_SERVER['REQUEST_URI'] === '/admin/home/productos/update') {
-                return redirect('/home');
-            }
-        }
+
         $id = htmlspecialchars($_GET['ID']);
         $producto = Productos::find($id);
         if($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -94,11 +85,7 @@ class admin extends Controller
 
     public function deleteProductos()
     {
-        if (!empty($_SESSION)) {
-            if ($_SESSION['rol'] !== 'ADM' && $_SERVER['REQUEST_URI'] === '/admin/home/productos/delete') {
-                return redirect('/home');
-            }
-        }
+
         $id = htmlspecialchars($_GET['ID']);
         $producto = Productos::find($id);
         $producto->delete();
@@ -110,21 +97,17 @@ class admin extends Controller
 
     public function facturas(Request $request)
     {
-        if (!empty($_SESSION)) {
-            if ($_SESSION['rol'] !== 'ADM' && $_SERVER['REQUEST_URI'] === '/admin/home/facturacion') {
-                return redirect('/home');
-            }
-        }
        if($request->orden = 'FACTURAR'){
-            $compras = DB::select("SELECT usuarios.id AS idUsuario,usuarios.nombre,
-            usuarios.correo,
+
+            $compras = DB::select("SELECT users.id AS idUsuario,users.name,
+            users.email,
             compras.created_at AS fecha_compra,
             productos.nombre AS producto, productos.precio,
             productos.impuesto,
             estado
             FROM productos
             RIGHT JOIN compras ON compras.idProducto = productos.id
-            LEFT JOIN usuarios ON compras.idCliente = usuarios.id
+            LEFT JOIN users ON compras.idCliente = users.id
             WHERE compras.estado= 'SIN FACTURAR'
             ");
 
@@ -152,8 +135,8 @@ class admin extends Controller
 
                         $users[$value->idUsuario] = array(
                             'idUsuario' => $value->idUsuario,
-                            'nombre' => $value->nombre,
-                            'correo' => $value->correo,
+                            'nombre' => $value->name,
+                            'correo' => $value->email,
                             'productos' => $productos[$value->idUsuario]
                         );
                     }
@@ -213,11 +196,7 @@ class admin extends Controller
     }
 
     public function viewFactura(){
-        if (!empty($_SESSION)) {
-            if ($_SESSION['rol'] !== 'ADM' && $_SERVER['REQUEST_URI'] === '/admin/home/factura') {
-                return redirect('/home');
-            }
-        }
+
         $id = htmlspecialchars($_GET['id']);
         $factura = Facturas::find($id);
         $productos = json_decode($factura->productos);

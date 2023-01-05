@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\authModel;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class auth extends Controller
@@ -11,30 +11,21 @@ class auth extends Controller
         $alertas = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $correo = htmlspecialchars($request->correo);
-            $user = authModel::where('correo',"$correo")->first();
 
-            if(isset($user->correo)){
-                $password = password_verify($request->clave, $user->clave);
-                if($password){
+            auth()->attempt([
+                'email' => $request->email,
+                'password' => $request->password
+            ]);
 
-                    $_SESSION['usuario'] = $user->nombre;
-                    $_SESSION['correo'] = $user->correo;
-                    $_SESSION['idUsuario'] = $user->id;
-                    $_SESSION['rol'] = $user->rol;
-                    if($user->rol === 'ADM'){
-                        return redirect('admin/home');
-                    }else{
-                        return redirect('/home');
-                    }
-
-                }else{
-                    $alertas['error'] = 'usuario o clave invalida';
-                }
-            }else{
+            if(!auth()->attempt($request->only('email','password'))){
                 $alertas['error'] = 'usuario o clave invalida';
-            }
-
+            }else{
+                if (auth()->user()->rol === 'ADM') {
+                    return redirect('/admin/home');
+                }else{
+                    return redirect('/home');
+                }
+            };
 
         }
 
@@ -48,14 +39,14 @@ class auth extends Controller
         $alertas = [];
 
         if($_SERVER['REQUEST_METHOD'] === 'POST'){
-            $registrar = new authModel();
+            $registrar = new User();
 
-            $registrar->nombre = $request->nombre;
-            $registrar->correo = $request->correo;
+            $registrar->name = $request->nombre;
+            $registrar->email = $request->correo;
 
             $password = password_hash($request->clave, PASSWORD_BCRYPT);
 
-            $registrar->clave = $password;
+            $registrar->password = $password;
             $registrar->rol = 'CLIENTE';
 
             if($registrar->save()){
@@ -72,7 +63,7 @@ class auth extends Controller
 
 
     public function deleteSesion(){
-        $_SESSION = [];
-        return redirect('/');
+        auth()->logout();
+        return redirect()->route('login.home');
     }
 }

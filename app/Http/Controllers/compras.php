@@ -8,13 +8,21 @@ use Illuminate\Http\Request;
 
 class compras extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+
+    }
+
+
+
     public function index(Request $request){
         $productos = Productos::all();
         $alertas = [];
         if($_SERVER['REQUEST_METHOD'] === 'POST'){
             $compra = new ModelsCompras();
 
-            $compra->idCliente = $_SESSION['idUsuario'];
+            $compra->idCliente = auth()->user()->id;
             $compra->idProducto = $request->producto;
             $compra->estado = 'SIN FACTURAR';
 

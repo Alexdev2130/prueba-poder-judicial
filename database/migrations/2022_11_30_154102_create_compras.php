@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('compras', function (Blueprint $table) {
             $table->integer('id')->autoIncrement();
             $table->integer('idCliente');
-            $table->foreign('idCliente')->references('id')->on('usuarios');
+            $table->foreign('idCliente')->references('id')->on('users');
             $table->integer('idProducto');
             $table->foreign('idProducto')->references('id')->on('productos')->onDelete('CASCADE');
             $table->string('estado');

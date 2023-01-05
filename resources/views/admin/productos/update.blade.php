@@ -26,7 +26,7 @@
             <input id="impuesto" name="impuesto" type="number" step="any" value="{{!empty($request->impuesto)? $request->impuesto : $producto->impuesto}}">
         </div>
 
-        <input type="submit" value="Crear Producto">
+        <input type="submit" value="Actualizar Producto">
     </form>
 
     @if (!empty($alertas))

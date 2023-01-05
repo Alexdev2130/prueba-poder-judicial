@@ -14,12 +14,12 @@
          @csrf
         <div class="campo">
             <label for="correo">Email</label>
-            <input id="correo" name="correo" type="email">
+            <input id="correo" name="email" type="email">
         </div>
 
         <div class="campo">
             <label for="clave">clave</label>
-            <input id="clave" name="clave" type="password">
+            <input id="clave" name="password" type="password">
         </div>
 
         <input type="submit" value="ingresar">

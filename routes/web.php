@@ -16,13 +16,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-session_start();
 
 
-
-
-Route::controller(auth::class)->group(function(){
-    Route::get('/', 'auth');
+Route::controller(auth::class)->name('login.')->group(function(){
+    Route::get('/', 'auth')->name('home');
     Route::post('/', 'auth');
 
     Route::get('/registrar', 'register');
@@ -31,10 +28,10 @@ Route::controller(auth::class)->group(function(){
     Route::get('/cerrar-sesion', 'deleteSesion');
 });
 
-Route::controller(admin::class)->group(function(){
+Route::controller(admin::class)->name('admin')->group(function(){
 
 
-    Route::get('/admin/home', 'index');
+    Route::get('/admin/home', 'index')->name('index');
 
     /**FACTURACIÓN */
     Route::post('/admin/home/facturacion', 'facturas');
@@ -58,7 +55,7 @@ Route::controller(admin::class)->group(function(){
 
 
 Route::controller(compras::class)->group(function(){
-    Route::get('/home', 'index');
+    Route::get('/home', 'index')->name('cliente');
     Route::post('/home', 'index');
 });
 
